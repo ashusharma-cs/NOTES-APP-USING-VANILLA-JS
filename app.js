@@ -21,6 +21,26 @@ addBtn.addEventListener("click", function (e) {
     localStorage.setItem("notes", JSON.stringify(notesObj));
     text.value = "";
 
+
+
+    let title=document.querySelector("#title");
+
+    let tl=localStorage.getItem("tls");
+    if(tl==null)
+    {
+        titleObj=[]
+    }
+    else
+    {
+        titleObj=JSON.parse(tl);
+    }
+
+    let titleValue=title.value;
+    titleObj.push(titleValue);                  
+
+    localStorage.setItem("tls", JSON.stringify(titleObj));
+    title.value="";
+
     showNotes();
 })
 
@@ -35,26 +55,47 @@ function showNotes() {
         notesObj = JSON.parse(notes);
     }
 
+    let tl=localStorage.getItem("tls");
+    if(tl==null)
+    {
+        titleObj=[]
+    }
+    else
+    {
+        titleObj=JSON.parse(tl);
+    }
+
     let html = "";
 
     for (let index = 0; index < notesObj.length; index++) {
         const element = notesObj[index];
 
-        html += `
+        const element1=titleObj[index];
+
+        if(element1=="")
+        {
+            html += `
         <div class="scard card mx-2 my-2" style="width: 18rem;">
         <!-- <img src="..." class="card-img-top" alt="..."> -->
         <div class="card-body">
-          <h5 class="card-title">NOTE ${index + 1}</h5>
+          <h5 class="card-title">NOTE ${index+1}</h5>
           <p class="card-text">${element}</p>
           <button id="${index}" onclick="deleteNote(this.id)"class="btn btn-danger">DELETE NOTE</a>
         </div>
-      </div>
-        `;
-
-
-
-
-
+      </div>`;
+        }
+        else
+        {
+            html += `
+            <div class="scard card mx-2 my-2" style="width: 18rem;">
+            <!-- <img src="..." class="card-img-top" alt="..."> -->
+            <div class="card-body">
+              <h5 class="card-title">${element1}</h5>
+              <p class="card-text">${element}</p>
+              <button id="${index}" onclick="deleteNote(this.id)"class="btn btn-danger">DELETE NOTE</a>
+            </div>
+          </div>`;
+        }
     }
     let note = document.querySelector("#note");
 
@@ -78,9 +119,21 @@ function deleteNote(index) {
         notesObj = JSON.parse(notes);
     }
 
+    let tl=localStorage.getItem("tls");
+    if(tl==null)
+    {
+        titleObj=[]
+    }
+    else
+    {
+        titleObj=JSON.parse(tl);
+    }
+
     notesObj.splice(index, 1);
+    titleObj.splice(index,1)
 
     localStorage.setItem("notes", JSON.stringify(notesObj));
+    localStorage.setItem("tls", JSON.stringify(titleObj));
 
 
     showNotes();
